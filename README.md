@@ -5,7 +5,7 @@ The project includes user authentication, product browsing, cart functionality, 
 ---
 
 ## 📌 Features
-###👤 User Features
+### 👤 User Features
  - User registration and login
 - View all products
 - Search products
@@ -14,7 +14,7 @@ The project includes user authentication, product browsing, cart functionality, 
 - View total cart price
 - Secure session-based authentication
 
-##🛠 Admin Features
+## 🛠 Admin Features
 - Admin login (separate from users)
 - Admin dashboard
 - Add new products
@@ -23,7 +23,7 @@ The project includes user authentication, product browsing, cart functionality, 
 
   ---
   
-##🧑‍💻 Technologies Used
+## 🧑‍💻 Technologies Used
 - Backend: Python (Flask)
 - Frontend: HTML, CSS
 - Database: SQLite
@@ -32,7 +32,7 @@ The project includes user authentication, product browsing, cart functionality, 
 
 ---
 
-##⚙️ Installation & Setup
+## ⚙️ Installation & Setup
 **1️⃣ Clone the Repository**
 
 git clone https://github.com/your-username/ecommerce-website.git
@@ -52,7 +52,7 @@ http://127.0.0.1:5000/login
 
 ---
 
-##🗄 Database
+## 🗄 Database
 - User **SQLite**
 - Database file database.db is created automatically
 - Tables
@@ -62,7 +62,7 @@ http://127.0.0.1:5000/login
 
 ---
 
-##🧪 Sample User Flow
+## 🧪 Sample User Flow
 1.Register as a user
 2.Login
 3.Browse products
@@ -73,7 +73,7 @@ http://127.0.0.1:5000/login
 
 ---
 
-##🎓 Academic Use
+## 🎓 Academic Use
 This project is suitable for:
 - BCA / BSc / MCA Mini Project
 - Final Year Project
@@ -82,7 +82,7 @@ This project is suitable for:
 
 ---
 
-##🚀 Future Enhancements
+## 🚀 Future Enhancements
 - Edit product option
 - Product images
 - Payment gateway integration
@@ -92,11 +92,11 @@ This project is suitable for:
 
 ---
 
-##👨‍🎓 Developed By
+## 👨‍🎓 Developed By
 **Farinaz**
 BCA Final Year Student
 
 ---
 
-##📜 License
+## 📜 License
 This project is for educational purposes only.
