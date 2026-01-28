@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, url_for
 import sqlite3
 
 app = Flask(__name__)
@@ -43,21 +43,30 @@ def init_db():
 
 init_db()
 
-# ---------- USER REGISTER ----------
+# ---------- HOME ----------
+@app.route("/")
+def home():
+    return redirect("/login")
+
+# ---------- REGISTER ----------
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         conn = get_db()
-        conn.execute(
-            "INSERT INTO users (username, password) VALUES (?, ?)",
-            (request.form["username"], request.form["password"])
-        )
-        conn.commit()
-        conn.close()
+        try:
+            conn.execute(
+                "INSERT INTO users (username, password) VALUES (?, ?)",
+                (request.form["username"], request.form["password"])
+            )
+            conn.commit()
+        except:
+            return "Username already exists"
+        finally:
+            conn.close()
         return redirect("/login")
     return render_template("register.html")
 
-# ---------- USER LOGIN ----------
+# ---------- LOGIN ----------
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -71,6 +80,7 @@ def login():
         if user:
             session["user_id"] = user["id"]
             return redirect("/products")
+
         return "Invalid credentials"
     return render_template("login.html")
 
@@ -91,7 +101,7 @@ def search():
     if "user_id" not in session:
         return redirect("/login")
 
-    q = request.args.get("q")
+    q = request.args.get("q", "")
     conn = get_db()
     products = conn.execute(
         "SELECT * FROM products WHERE name LIKE ?",
@@ -103,6 +113,9 @@ def search():
 # ---------- ADD TO CART ----------
 @app.route("/add_to_cart/<int:product_id>")
 def add_to_cart(product_id):
+    if "user_id" not in session:
+        return redirect("/login")
+
     conn = get_db()
     conn.execute(
         "INSERT INTO cart (user_id, product_id) VALUES (?, ?)",
@@ -112,9 +125,12 @@ def add_to_cart(product_id):
     conn.close()
     return redirect("/products")
 
-# ---------- VIEW CART ----------
+# ---------- CART ----------
 @app.route("/cart")
 def cart():
+    if "user_id" not in session:
+        return redirect("/login")
+
     conn = get_db()
     items = conn.execute("""
         SELECT cart.id, products.name, products.price
@@ -127,7 +143,7 @@ def cart():
     conn.close()
     return render_template("cart.html", items=items, total=total)
 
-# ---------- REMOVE FROM CART ----------
+# ---------- REMOVE ----------
 @app.route("/remove/<int:id>")
 def remove(id):
     conn = get_db()
@@ -149,6 +165,9 @@ def admin_login():
 # ---------- ADMIN DASHBOARD ----------
 @app.route("/admin/dashboard")
 def admin_dashboard():
+    if "admin" not in session:
+        return redirect("/admin")
+
     conn = get_db()
     products = conn.execute("SELECT * FROM products").fetchall()
     conn.close()
@@ -157,6 +176,9 @@ def admin_dashboard():
 # ---------- ADD PRODUCT ----------
 @app.route("/admin/add", methods=["GET", "POST"])
 def add_product():
+    if "admin" not in session:
+        return redirect("/admin")
+
     if request.method == "POST":
         conn = get_db()
         conn.execute(
@@ -171,6 +193,9 @@ def add_product():
 # ---------- DELETE PRODUCT ----------
 @app.route("/admin/delete/<int:id>")
 def delete_product(id):
+    if "admin" not in session:
+        return redirect("/admin")
+
     conn = get_db()
     conn.execute("DELETE FROM products WHERE id=?", (id,))
     conn.commit()
@@ -185,4 +210,3 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
