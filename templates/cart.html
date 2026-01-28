@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <h2>Your Cart</h2>
+
+    <div>
+        <a href="/products">Products</a>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<!-- CART ITEMS -->
+<div class="container">
+<div class="invoice-btn-container">
+    <a href="/invoice/pdf" class="invoice-btn">
+        Generate Invoice
+    </a>
+</div>
+    {% if items %}
+        <table class="cart-table">
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>₹ {{ item.price }}</td>
+                <td>
+                    <a href="/remove/{{ item.id }}" class="btn-danger">
+                        Remove
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+
+        </table>
+
+        <h3 class="total">Total: ₹ {{ total }}</h3>
+
+    {% else %}
+        <p class="empty">Your cart is empty</p>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

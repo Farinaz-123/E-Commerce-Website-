@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Products</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <h2>E-Commerce</h2>
+
+    <form action="/search" method="get" class="search-box">
+        <input type="text" name="q" placeholder="Search products..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    <div>
+        <a href="/cart">Cart</a>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="container">
+
+    {% if products %}
+        {% for product in products %}
+            <div class="product-card">
+                <h3>{{ product.name }}</h3>
+                <p class="price">₹ {{ product.price }}</p>
+                <p>{{ product.description }}</p>
+
+                <a href="/add_to_cart/{{ product.id }}" class="btn">
+                    Add to Cart
+                </a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="empty">No products available</p>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

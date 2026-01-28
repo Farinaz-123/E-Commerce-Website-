@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body { font-family: Arial; }
+        .invoice-box {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        .total {
+            font-weight: bold;
+        }
+        .print-btn {
+            margin-top: 20px;
+            padding: 10px 16px;
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="invoice-box">
+    <h2>E-Commerce Invoice</h2>
+    <hr>
+
+    <table>
+        <tr>
+            <th>Product</th>
+            <th>Price (₹)</th>
+            <th>Qty</th>
+            <th>Total (₹)</th>
+        </tr>
+
+        {% for item in cart_items %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.qty }}</td>
+            <td>{{ item.total }}</td>
+        </tr>
+        {% endfor %}
+
+        <tr class="total">
+            <td colspan="3">Grand Total</td>
+            <td>₹ {{ grand_total }}</td>
+        </tr>
+    </table>
+
+    <button class="print-btn" onclick="window.print()">Print Invoice</button>
+</div>
+<a href="/invoice/pdf" class="btn btn-primary">
+    Download Invoice (PDF)
+</a>
+</body>
+</html>

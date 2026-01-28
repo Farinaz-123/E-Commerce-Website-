@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <h2>Admin Dashboard</h2>
+
+    <div>
+        <a href="/admin/add">Add Product</a>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<!-- PRODUCT LIST -->
+<div class="container">
+
+    {% if products %}
+        <table class="cart-table">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+
+            {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td>{{ product.name }}</td>
+                <td>₹ {{ product.price }}</td>
+                <td>{{ product.description }}</td>
+                <td>
+                    <a href="/admin/delete/{{ product.id }}" class="btn-danger">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+
+        </table>
+    {% else %}
+        <p class="empty">No products added yet</p>
+    {% endif %}
+
+</div>
+
+</body>
+</html>
