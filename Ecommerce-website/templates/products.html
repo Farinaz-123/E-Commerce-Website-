@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Products</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="container">
+
+<div class="nav">
+    <a href="/cart"><i class="fa-solid fa-cart-shopping"></i> Cart</a>
+    <a href="/logout"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+</div>
+
+<form action="/search">
+    <input type="text" name="q" placeholder="Search product..." required>
+</form>
+
+<table>
+<tr>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Description</th>
+    <th>Action</th>
+</tr>
+
+{% for p in products %}
+<tr>
+    <td>{{ p.name }}</td>
+    <td>₹{{ p.price }}</td>
+    <td>{{ p.description }}</td>
+    <td>
+        <a href="/add_to_cart/{{ p.id }}">
+            <i class="fa-solid fa-plus"></i> Add
+        </a>
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+</div>
+</body>
+</html>
