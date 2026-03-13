@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard - The herbal Basket</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <h2>The herbal Basket</h2>
+        <div class="links">
+            <a href="/products">Products</a>
+            <a href="/cart">Cart</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="container-dashboard">
+        <div class="dashboard-header">
+            <h1>Welcome back, {{ user.username }}!</h1>
+            <p>Manage your orders and account settings here.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- PROFILE UPDATE SECTION -->
+            <div class="dashboard-card glass">
+                <h3>Profile Settings</h3>
+                <form action="/update_profile" method="POST">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" name="username" value="{{ user.username }}" placeholder="New Username">
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" name="password" placeholder="Leave blank to keep current">
+                    </div>
+                    <button type="submit" class="btn">Update Profile</button>
+                </form>
+            </div>
+
+            <!-- ORDER HISTORY SECTION -->
+            <div class="dashboard-card glass full-width">
+                <h3>My Orders</h3>
+                {% if orders %}
+                    <div class="table-container-dashboard">
+                        <table class="cart-table">
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Total Amount</th>
+                                <th>Invoice</th>
+                            </tr>
+                            {% for order in orders %}
+                            <tr>
+                                <td>#{{ order.id }}</td>
+                                <td>{{ order.order_date }}</td>
+                                <td>₹ {{ order.total_amount }}</td>
+                                <td>
+                                    <a href="/invoice/pdf/{{ order.id }}" class="edit-btn" style="background: var(--success);">
+                                        Download PDF
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="empty-state">You haven't placed any orders yet. <a href="/products">Start shopping!</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

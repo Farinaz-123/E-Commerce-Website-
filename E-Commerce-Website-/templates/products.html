@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <h2>The herbal Basket</h2>
+
+        <form action="/search" method="get" class="search-box" style="position: relative;">
+            <input type="text" name="q" id="search-input" placeholder="Search products..." required autocomplete="off">
+            <button type="submit">Search</button>
+            <div id="search-dropdown" class="search-dropdown" style="display: none; position: absolute; top: 100%; left: 0; width: calc(100% - 80px); background: white; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 1000; max-height: 200px; overflow-y: auto;">
+                <!-- Suggestions will be injected here -->
+            </div>
+        </form>
+
+        <div class="links">
+            <a href="/dashboard">My Account</a>
+            <a href="/cart">Cart</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+    
+    <!-- CATEGORY FILTER -->
+    <div class="category-filter" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+        
+        <div class="smart-filter" style="margin-right: auto;">
+            <form action="/products" method="get" style="display: flex; align-items: center; gap: 10px;">
+                {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+                {% if selected_sort %}<input type="hidden" name="sort" value="{{ selected_sort }}">{% endif %}
+                <label for="problem-select" style="font-weight: 600; color: var(--primary-color);">🔍 Smart Suggestion:</label>
+                <select name="problem" id="problem-select" onchange="this.form.submit()" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc; outline: none; background: white; cursor: pointer;">
+                    <option value="">What is your health concern?</option>
+                    <option value="digestion" {% if selected_problem == 'digestion' %}selected{% endif %}>Digestion & Gut Health</option>
+                    <option value="skin" {% if selected_problem == 'skin' %}selected{% endif %}>Skin Care & Acne</option>
+                    <option value="hair" {% if selected_problem == 'hair' %}selected{% endif %}>Hair Fall & Scalp Issues</option>
+                    <option value="immunity" {% if selected_problem == 'immunity' %}selected{% endif %}>Immunity, Cold & Cough</option>
+                    <option value="energy" {% if selected_problem == 'energy' %}selected{% endif %}>Energy & Brain Focus</option>
+                    <option value="sleep" {% if selected_problem == 'sleep' %}selected{% endif %}>Sleep & Stress Relief</option>
+                    <option value="pain" {% if selected_problem == 'pain' %}selected{% endif %}>Joint Pain & Inflammation</option>
+                    <option value="heart" {% if selected_problem == 'heart' %}selected{% endif %}>Heart & Blood Circulation</option>
+                </select>
+            </form>
+        </div>
+
+        <div>
+            <a href="/products" class="category-btn {% if not selected_category %}active{% endif %}">All Products</a>
+            {% for cat in categories %}
+                <a href="/products?category={{ cat.category }}{% if selected_problem %}&problem={{ selected_problem }}{% endif %}{% if selected_sort %}&sort={{ selected_sort }}{% endif %}" 
+                   class="category-btn {% if selected_category == cat.category %}active{% endif %}">
+                   {{ cat.category }}
+                </a>
+            {% endfor %}
+        </div>
+
+        <div class="sort-dropdown">
+            <select onchange="location.href='/products?sort=' + this.value + '{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_problem %}&problem={{ selected_problem }}{% endif %}'">
+                <option value="newest" {% if selected_sort == 'newest' %}selected{% endif %}>Newest First</option>
+                <option value="price_low" {% if selected_sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_high" {% if selected_sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- PRODUCTS -->
+    <div class="container">
+
+        {% if products %}
+        {% for product in products %}
+        <div class="product-card">
+
+            <div class="product-image">
+                <a href="/product/{{ product.id }}">
+                    <img src="{{ url_for('static', filename='images/' + product.image) }}">
+                </a>
+            </div>
+
+            <div class="product-info">
+                <h3><a href="/product/{{ product.id }}" style="color: inherit;">{{ product.name }}</a></h3>
+
+                <p class="price">₹ {{ product.price }}</p>
+
+                <p>{{ product.description }}</p>
+
+                {% if product.stock > 0 %}
+                    <p class="stock-info">In Stock: {{ product.stock }}</p>
+                    <a href="/add_to_cart/{{ product.id }}" class="btn">
+                        Add to Cart
+                    </a>
+                {% else %}
+                    <p class="out-of-stock">Out of Stock</p>
+                    <button class="btn" disabled style="background: var(--text-secondary); cursor: not-allowed;">
+                        Add to Cart
+                    </button>
+                {% endif %}
+            </div>
+
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="empty">No products available</p>
+        {% endif %}
+
+    </div>
+
+    <style>
+        .search-suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            color: var(--text-color);
+            text-decoration: none;
+            display: block;
+        }
+        .search-suggestion-item:last-child {
+            border-bottom: none;
+        }
+        .search-suggestion-item:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+
+    <script>
+        const searchInput = document.getElementById('search-input');
+        const searchDropdown = document.getElementById('search-dropdown');
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            
+            if (query.length > 0) {
+                fetch(`/api/search_suggestions?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        searchDropdown.innerHTML = '';
+                        if (data.length > 0) {
+                            data.forEach(product => {
+                                const a = document.createElement('a');
+                                a.href = `/product/${product.id}`;
+                                a.className = 'search-suggestion-item';
+                                a.textContent = product.name;
+                                searchDropdown.appendChild(a);
+                            });
+                            searchDropdown.style.display = 'block';
+                        } else {
+                            searchDropdown.style.display = 'none';
+                        }
+                    })
+                    .catch(error => console.error('Error fetching suggestions:', error));
+            } else {
+                searchDropdown.style.display = 'none';
+                searchDropdown.innerHTML = '';
+            }
+        });
+
+        // Hide dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!searchInput.contains(event.target) && !searchDropdown.contains(event.target)) {
+                searchDropdown.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>

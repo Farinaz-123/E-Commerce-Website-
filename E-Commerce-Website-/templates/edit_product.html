@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="center">
+
+<div class="card">
+    <h2>Edit Product</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        <input type="text" name="name" value="{{ product[1] }}" required>
+        <input type="number" name="price" value="{{ product[2] }}" required>
+        <textarea name="description" required>{{ product[3] }}</textarea>
+        <input type="text" name="category" value="{{ product[5] }}" placeholder="Category" required>
+        <input type="number" name="stock" value="{{ product[6] }}" placeholder="Stock" min="0" required>
+        <!-- Optional image replace -->
+        <input type="file" name="image" accept="image/*">
+        <button type="submit">Update Product</button>
+    </form>
+
+    <p>
+        <a href="/admin/dashboard">Back to Dashboard</a>
+    </p>
+</div>
+
+</body>
+</html>

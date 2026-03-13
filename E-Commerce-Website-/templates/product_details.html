@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} - Product Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <h2>The herbal Basket</h2>
+        <div class="links">
+            <a href="/dashboard">My Account</a>
+            <a href="/products">Products</a>
+            <a href="/cart">Cart</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="detail-container">
+        <!-- PRODUCT INFO SECTION -->
+        <div class="product-detail-card glass">
+            <div class="detail-image">
+                <img src="{{ url_for('static', filename='images/' + product.image) }}">
+            </div>
+            <div class="detail-info">
+                <h1>{{ product.name }}</h1>
+                <p class="category-tag">{{ product.category }}</p>
+                
+                {% if avg_rating %}
+                    <div class="rating-badge">★ {{ "%.1f"|format(avg_rating) }} / 5.0</div>
+                {% endif %}
+
+                <p class="detail-price">₹ {{ product.price }}</p>
+                <p class="detail-desc">{{ product.description }}</p>
+
+                {% if product.stock > 0 %}
+                    <p class="stock-info">In Stock: {{ product.stock }} items</p>
+                    <a href="/add_to_cart/{{ product.id }}" class="btn">Add to Cart</a>
+                {% else %}
+                    <p class="out-of-stock">Out of Stock</p>
+                    <button class="btn" disabled style="background: var(--text-secondary); cursor: not-allowed;">Add to Cart</button>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- REVIEWS SECTION -->
+        <div class="reviews-section">
+            <div class="section-header">
+                <h2>Customer Reviews</h2>
+            </div>
+
+            <!-- ADD REVIEW FORM -->
+            <div class="add-review-card glass">
+                <h3>Leave a Review</h3>
+                <form action="/add_review/{{ product.id }}" method="POST">
+                    <div class="rating-input">
+                        <label>Rating:</label>
+                        <select name="rating" required>
+                            <option value="5">5 Stars - Excellent</option>
+                            <option value="4">4 Stars - Good</option>
+                            <option value="3">3 Stars - Average</option>
+                            <option value="2">2 Stars - Poor</option>
+                            <option value="1">1 Star - Very Bad</option>
+                        </select>
+                    </div>
+                    <textarea name="comment" placeholder="Write your thoughts about this product..." required></textarea>
+                    <button type="submit" class="btn">Submit Review</button>
+                </form>
+            </div>
+
+            <!-- REVIEWS LIST -->
+            <div class="reviews-list">
+                {% if reviews %}
+                    {% for review in reviews %}
+                        <div class="review-card glass">
+                            <div class="review-header">
+                                <span class="reviewer">{{ review.username }}</span>
+                                <span class="review-rating">★ {{ review.rating }}</span>
+                            </div>
+                            <p class="review-date">{{ review.date }}</p>
+                            <p class="review-comment">{{ review.comment }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="empty-reviews">No reviews yet. Be the first to review!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

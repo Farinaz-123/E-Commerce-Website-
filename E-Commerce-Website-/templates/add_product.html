@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="center">
+
+<div class="card">
+    <h2>Add New Product</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+    <input type="text" name="name" placeholder="Product Name" required>
+
+    <input type="number" name="price" placeholder="Price" required>
+
+    <textarea name="description" placeholder="Product Description" required></textarea>
+    <input type="text" name="category" placeholder="Category (e.g., Electronics, Beauty)" required>
+    <input type="number" name="stock" placeholder="Initial Stock" min="0" required>
+
+    <input type="file" name="image" accept="image/*" required>
+
+    <button type="submit">Add Product</button>
+</form>
+
+    <p>
+        <a href="/admin/dashboard">Back to Dashboard</a>
+    </p>
+</div>
+</body>
+</html>
