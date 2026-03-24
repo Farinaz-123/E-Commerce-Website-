@@ -11,9 +11,27 @@
 <div class="card">
     <h2>Register</h2>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <p class="flash {{ category }}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if form.errors %}
+        {% for field, errors in form.errors.items() %}
+            {% for error in errors %}
+                <p class="flash danger">{{ error }}</p>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+
     <form method="POST">
+        {{ form.hidden_tag() }}
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
+        <input type="password" name="confirm_password" placeholder="Confirm Password" required>
 
         <button type="submit">Register</button>
     </form>

@@ -6,6 +6,10 @@ import sqlite3
 import os
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib import colors
+from reportlab.lib.units import inch
 import io
 from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -22,7 +26,7 @@ app = Flask(__name__)
 
 # Security Configuration
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'dev-key-change-in-production')
-app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_SECURE'] = os.environ.get('FLASK_ENV') == 'production'
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
@@ -696,6 +700,8 @@ def invoice_pdf(order_id):
         conn.close()
         return redirect("/products")
 
+    user = conn.execute("SELECT * FROM users WHERE id=?", (session["user_id"],)).fetchone()
+
     items = conn.execute("""
         SELECT products.name, order_items.price
         FROM order_items
@@ -707,35 +713,68 @@ def invoice_pdf(order_id):
 
     buffer = io.BytesIO()
 
-    pdf = canvas.Canvas(buffer, pagesize=A4)
+    doc = SimpleDocTemplate(buffer, pagesize=A4, rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=30)
+    elements = []
 
-    width, height = A4
+    styles = getSampleStyleSheet()
+    right_align_style = ParagraphStyle(name='RightAlign', parent=styles['Normal'], alignment=2)
+    center_align_style = ParagraphStyle(name='CenterAlign', parent=styles['Normal'], alignment=1)
 
-    pdf.setFont("Helvetica-Bold", 16)
-    pdf.drawString(220, height - 50, "INVOICE")
+    # Header
+    header_data = [
+        [Paragraph('<b>THE HERBAL BASKET</b><br/>Your Trusted Ayurvedic Store', styles['Normal']),
+         Paragraph(f"<b>INVOICE</b><br/>Order #{order_id}<br/>Date: {order['order_date']}", right_align_style)]
+    ]
+    header_table = Table(header_data, colWidths=[3.5*inch, 3.5*inch])
+    header_table.setStyle(TableStyle([
+        ('VALIGN', (0,0), (-1,-1), 'TOP'),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 20),
+    ]))
+    elements.append(header_table)
+    elements.append(Spacer(1, 10))
 
-    pdf.setFont("Helvetica", 10)
-    pdf.drawString(50, height - 80, f"Order ID: {order_id}")
-    pdf.drawString(50, height - 95, f"Date: {order['order_date']}")
+    # Customer Info
+    customer_data = [
+        [Paragraph(f"<b>Bill To:</b><br/>{user['username']}", styles['Normal'])]
+    ]
+    customer_table = Table(customer_data, colWidths=[7*inch])
+    customer_table.setStyle(TableStyle([
+        ('BOX', (0,0), (-1,-1), 1, colors.lightgrey),
+        ('PADDING', (0,0), (-1,-1), 10),
+        ('BACKGROUND', (0,0), (-1,-1), colors.whitesmoke),
+    ]))
+    elements.append(customer_table)
+    elements.append(Spacer(1, 25))
 
-    y = height - 130
-
+    # Items Table
+    data = [['Item Description', 'Price (INR)']]
     total = 0
-
     for item in items:
-
-        pdf.drawString(50, y, item["name"])
-        pdf.drawString(300, y, f"₹ {item['price']}")
-
+        data.append([item["name"], f"Rs. {item['price']}"])
         total += item["price"]
 
-        y -= 20
+    data.append(['Grand Total', f"Rs. {total}"])
 
-    pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(50, y - 20, f"Total Amount: ₹ {total}")
+    t = Table(data, colWidths=[5.5*inch, 1.5*inch])
+    t.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#4CAF50')),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.whitesmoke),
+        ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+        ('ALIGN', (1,0), (1,-1), 'RIGHT'),
+        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0,0), (-1,0), 12),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 10),
+        ('TOPPADDING', (0,0), (-1,-1), 10),
+        ('GRID', (0,0), (-1,-1), 1, colors.lightgrey),
+        ('FONTNAME', (0,-1), (-1,-1), 'Helvetica-Bold'),
+        ('BACKGROUND', (0,-1), (-1,-1), colors.whitesmoke),
+    ]))
+    elements.append(t)
 
-    pdf.showPage()
-    pdf.save()
+    elements.append(Spacer(1, 40))
+    elements.append(Paragraph("<b>Thank you for shopping with The Herbal Basket!</b>", center_align_style))
+
+    doc.build(elements)
 
     buffer.seek(0)
 
