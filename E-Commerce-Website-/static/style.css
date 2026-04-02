@@ -1,24 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 /* -------- RESET & VARIABLES -------- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Outfit', sans-serif;
 }
 
 :root {
-    --bg-color: #0d1117;
-    --glass-bg: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    --text-primary: #f8fafc;
+    --bg-color: #05080e;
+    --glass-bg: rgba(255, 255, 255, 0.02);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.5);
+    --glass-highlight: rgba(255, 255, 255, 0.1);
+    --text-primary: #ffffff;
     --text-secondary: #94a3b8;
-    --accent-1: #3b82f6;
-    /* Blue */
-    --accent-2: #8b5cf6;
-    /* Violet */
+    --accent-1: #10b981; /* Premium Emerald */
+    --accent-1-glow: rgba(16, 185, 129, 0.4);
+    --accent-2: #0ea5e9; /* Light Ocean Blue */
     --danger: #ef4444;
     --success: #10b981;
     --warning: #f59e0b;
@@ -31,6 +31,8 @@ body {
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body::before {
@@ -40,8 +42,8 @@ body::before {
     left: -50%;
     width: 200vw;
     height: 200vh;
-    background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, rgba(13, 17, 23, 0) 50%),
-        radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, rgba(13, 17, 23, 0) 40%);
+    background: radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.08) 0%, rgba(5, 8, 14, 0) 45%),
+        radial-gradient(circle at 70% 60%, rgba(14, 165, 233, 0.08) 0%, rgba(5, 8, 14, 0) 40%);
     z-index: -1;
     pointer-events: none;
 }
@@ -105,53 +107,60 @@ p {
 }
 
 /* -------- FORMS -------- */
+/* -------- FORMS -------- */
 input,
-textarea {
+textarea,
+select {
     width: 100%;
-    padding: 14px 18px;
+    padding: 16px 20px;
     margin-bottom: 20px;
-    border-radius: 12px;
-    background: rgba(0, 0, 0, 0.2);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid var(--glass-border);
     color: var(--text-primary);
     font-size: 15px;
     outline: none;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
     border-color: var(--accent-1);
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 4px var(--accent-1-glow);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
 }
 
 textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 120px;
 }
 
 input[type="file"] {
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.1);
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.02);
     cursor: pointer;
 }
 
 input[type="file"]::file-selector-button {
-    background: var(--accent-1);
+    background: linear-gradient(135deg, var(--accent-1), #059669);
     color: white;
-    padding: 8px 16px;
+    padding: 10px 20px;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     margin-right: 15px;
     cursor: pointer;
-    transition: 0.3s;
+    font-weight: 600;
+    transition: all 0.3s;
 }
 
 input[type="file"]::file-selector-button:hover {
-    background: var(--accent-2);
+    box-shadow: 0 4px 15px var(--accent-1-glow);
+    transform: translateY(-1px);
 }
 
+/* -------- BUTTONS -------- */
 /* -------- BUTTONS -------- */
 button,
 .btn {
@@ -159,123 +168,159 @@ button,
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding: 14px 24px;
-    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-    border: none;
-    border-radius: 12px;
+    padding: 16px 28px;
+    background: linear-gradient(135deg, var(--accent-1), #059669);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
     color: white;
     font-size: 16px;
     font-weight: 600;
+    letter-spacing: 0.5px;
     cursor: pointer;
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     text-decoration: none;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+button::before,
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
 }
 
 button:hover,
 .btn:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 30px var(--accent-1-glow);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+button:hover::before,
+.btn:hover::before {
+    opacity: 1;
 }
 
 button:active,
 .btn:active {
-    transform: translateY(1px);
+    transform: translateY(1px) scale(0.98);
 }
 
 .btn-danger {
     background: linear-gradient(135deg, var(--danger), #b91c1c);
-    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
 }
 
 .btn-danger:hover {
-    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
-    background: linear-gradient(135deg, #f87171, var(--danger));
+    box-shadow: 0 12px 30px rgba(239, 68, 68, 0.4);
 }
 
 .edit-btn {
-    background: linear-gradient(135deg, var(--warning), #d97706);
-    color: white;
+    background: rgba(255, 255, 255, 0.05); /* Stealth minimal button */
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    color: var(--text-primary);
     padding: 10px 16px;
-    border-radius: 8px;
+    border-radius: 10px;
     text-decoration: none;
     margin-right: 8px;
     font-weight: 500;
     font-size: 14px;
     display: inline-block;
+    transition: all 0.3s;
 }
 
 .edit-btn:hover {
-    background: linear-gradient(135deg, #fbbf24, var(--warning));
+    background: rgba(255, 255, 255, 0.1);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    border-color: rgba(255,255,255,0.3);
 }
 
 .invoice-btn {
-    background: linear-gradient(135deg, var(--success), #059669);
+    background: linear-gradient(135deg, var(--accent-2), #0284c7);
     color: white;
     padding: 16px 32px;
-    font-size: 18px;
-    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+}
+
+.invoice-btn:hover {
+    box-shadow: 0 12px 30px rgba(14, 165, 233, 0.4);
 }
 
 a {
     color: var(--accent-1);
     text-decoration: none;
-    transition: 0.3s;
+    transition: all 0.3s;
 }
 
 a:hover {
-    color: var(--accent-2);
+    color: #34d399; /* lighter emerald */
 }
 
 /* -------- NAVBAR -------- */
 .navbar {
-    background: rgba(13, 17, 23, 0.7);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--glass-border);
-    padding: 15px 5%;
+    background: rgba(5, 8, 14, 0.75);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 16px 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: sticky;
     top: 0;
     z-index: 100;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
 .navbar h2 {
     font-weight: 800;
-    background: linear-gradient(to right, #fff, var(--text-secondary));
+    font-size: 28px;
+    background: linear-gradient(to right, #10b981, #34d399); /* Emerald Gradient for Herbal feel */
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -0.5px;
+    margin: 0;
 }
 
 .navbar .links {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 30px;
 }
 
 .navbar a {
-    color: var(--text-primary);
+    color: var(--text-secondary);
     font-weight: 500;
+    font-size: 16px;
     position: relative;
     padding: 5px 0;
+    transition: all 0.3s ease;
+}
+
+.navbar a:hover {
+    color: var(--text-primary);
 }
 
 .navbar a::after {
     content: '';
     position: absolute;
-    bottom: 0;
+    bottom: -2px;
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--accent-1);
-    transition: width 0.3s;
+    background: linear-gradient(90deg, var(--accent-1), transparent);
+    transition: width 0.3s ease;
+    border-radius: 2px;
 }
 
 .navbar a:hover::after {
@@ -285,17 +330,19 @@ a:hover {
 .search-box {
     display: flex;
     align-items: center;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 20px;
-    padding: 4px;
-    border: 1px solid var(--glass-border);
-    transition: all 0.3s;
-    width: 300px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 50px;
+    padding: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 320px;
 }
 
 .search-box:focus-within {
     border-color: var(--accent-1);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 4px var(--accent-1-glow);
+    background: rgba(255, 255, 255, 0.05);
+    width: 380px;
 }
 
 .search-box input {
@@ -305,13 +352,14 @@ a:hover {
     box-shadow: none;
     padding: 8px 16px;
     width: 100%;
+    color: var(--text-primary);
 }
 
 .search-box button {
     width: auto;
-    padding: 8px 20px;
+    padding: 8px 24px;
     margin: 0;
-    border-radius: 16px;
+    border-radius: 40px;
     font-size: 14px;
 }
 
@@ -319,39 +367,58 @@ a:hover {
 .category-filter {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    padding: 30px 5% 0;
+    gap: 12px;
+    padding: 40px 5% 10px;
     flex-wrap: wrap;
     max-width: 1400px;
     margin: 0 auto;
 }
 
 .category-btn {
-    padding: 10px 24px;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
+    padding: 12px 28px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 50px;
     color: var(--text-secondary);
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
     text-decoration: none;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
 }
 
 .category-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.06);
     color: var(--text-primary);
     border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
 .category-btn.active {
-    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    background: linear-gradient(135deg, var(--accent-1), #059669);
     color: white;
-    border: none;
-    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 8px 25px var(--accent-1-glow);
+    font-weight: 600;
+}
+
+.smart-filter select {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    padding: 12px 20px !important;
+    border-radius: 14px !important;
+    backdrop-filter: blur(10px) !important;
+    outline: none !important;
+    transition: all 0.3s fade !important;
+    font-family: 'Outfit', sans-serif !important;
+}
+
+.smart-filter select:focus {
+    border-color: var(--accent-1) !important;
+    box-shadow: 0 0 0 4px var(--accent-1-glow) !important;
 }
 
 .sort-dropdown {
@@ -359,14 +426,21 @@ a:hover {
 }
 
 .sort-dropdown select {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     color: var(--text-primary);
-    padding: 10px 15px;
+    padding: 12px 20px;
     border-radius: 50px;
     outline: none;
     cursor: pointer;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
+    transition: all 0.3s;
+    font-family: 'Outfit', sans-serif;
+}
+
+.sort-dropdown select:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 
@@ -399,54 +473,58 @@ a:hover {
 
 /* -------- PRODUCT CARD -------- */
 .product-card {
-    background: var(--glass-bg);
+    background: rgba(255, 255, 255, 0.02);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 24px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    animation: zoomIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: zoomIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+    position: relative;
 }
 
-.product-card:nth-child(2) {
+.product-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+.product-card:nth-child(even) {
     animation-delay: 0.1s;
 }
 
-.product-card:nth-child(3) {
-    animation-delay: 0.2s;
-}
-
-.product-card:nth-child(4) {
-    animation-delay: 0.3s;
-}
-
-.product-card:nth-child(5) {
-    animation-delay: 0.4s;
-}
-
 .product-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.04);
 }
 
 .product-image {
     width: 100%;
-    border-radius: 16px;
+    border-radius: 18px;
     overflow: hidden;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     position: relative;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.02);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
 }
 
 .product-image img {
     width: 100%;
-    height: 240px;
+    height: 260px;
     object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .product-card:hover .product-image img {
@@ -460,29 +538,33 @@ a:hover {
 }
 
 .product-info h3 {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 600;
     margin-bottom: 8px;
     color: var(--text-primary);
+    line-height: 1.3;
 }
 
 .price {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
-    background: linear-gradient(to right, var(--success), #34d399);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 12px;
+    color: #10b981;
+    margin-bottom: 16px;
+    display: inline-block;
+    padding: 4px 0;
 }
 
 .product-info p {
-    font-size: 14px;
-    margin-bottom: 20px;
+    font-size: 15px;
+    margin-bottom: 24px;
     flex-grow: 1;
+    color: var(--text-secondary);
+    line-height: 1.6;
 }
 
 .product-info .btn {
     width: 100%;
+    margin-top: auto;
 }
 
 /* -------- TABLE (CART & ADMIN) -------- */
@@ -495,101 +577,106 @@ a:hover {
 .cart-table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 12px;
+    border-spacing: 0 16px;
 }
 
 .cart-table th {
     text-align: left;
-    padding: 16px 20px;
+    padding: 16px 24px;
     color: var(--text-secondary);
     font-weight: 500;
-    font-size: 14px;
+    font-size: 13px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
 }
 
 .cart-table td {
     background: rgba(255, 255, 255, 0.02);
-    padding: 20px;
-    border-top: 1px solid var(--glass-border);
-    border-bottom: 1px solid var(--glass-border);
+    padding: 24px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    backdrop-filter: blur(12px);
 }
 
 .cart-table tr td:first-child {
-    border-left: 1px solid var(--glass-border);
-    border-top-left-radius: 16px;
-    border-bottom-left-radius: 16px;
+    border-left: 1px solid rgba(255,255,255,0.04);
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
 }
 
 .cart-table tr td:last-child {
-    border-right: 1px solid var(--glass-border);
-    border-top-right-radius: 16px;
-    border-bottom-right-radius: 16px;
+    border-right: 1px solid rgba(255,255,255,0.04);
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
 }
 
 .cart-table tr {
-    transition: transform 0.2s, background 0.2s;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+}
+
+.cart-table tr:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
 .cart-table tr:hover td {
     background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255,255,255,0.1);
 }
 
 .cart-table img {
-    width: 60px;
-    height: 60px;
+    width: 64px;
+    height: 64px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 12px;
     vertical-align: middle;
-    margin-right: 15px;
+    margin-right: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .total {
-    font-size: 24px;
-    font-weight: 700;
+    font-size: 28px;
+    font-weight: 800;
     text-align: right;
-    margin: 30px 0;
-    padding: 20px;
-    background: var(--glass-bg);
-    border-radius: 16px;
-    border: 1px solid var(--glass-border);
+    margin: 40px 0;
+    padding: 24px 32px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.08);
     color: var(--text-primary);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    backdrop-filter: blur(20px);
 }
 
 /* Checkout Section */
 .checkout-section {
     display: flex;
     justify-content: flex-end;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 /* -------- EMPTY STATE -------- */
 .empty {
     text-align: center;
-    padding: 60px 20px;
+    padding: 80px 20px;
     color: var(--text-secondary);
     font-size: 18px;
     grid-column: 1 / -1;
-    background: var(--glass-bg);
-    border-radius: 16px;
-    border: 1px dashed rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.01);
+    border-radius: 24px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
     animation: fadeIn 0.8s ease;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* -------- DASHBOARD STYLES -------- */
 .container-dashboard {
     max-width: 1200px;
-    margin: 40px auto;
+    margin: 60px auto;
     padding: 0 5%;
 }
 
@@ -598,20 +685,25 @@ a:hover {
 }
 
 .dashboard-header h1 {
-    font-size: 32px;
+    font-size: 36px;
     font-weight: 800;
     margin-bottom: 8px;
+    color: var(--text-primary);
 }
 
 .dashboard-grid {
     display: grid;
     grid-template-columns: 1fr 2fr;
-    gap: 30px;
+    gap: 32px;
 }
 
 .dashboard-card {
-    padding: 30px;
+    padding: 32px;
     border-radius: 24px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
 .dashboard-card.full-width {
@@ -619,24 +711,28 @@ a:hover {
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .form-group label {
     display: block;
     font-size: 14px;
+    font-weight: 500;
     color: var(--text-secondary);
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
 .table-container-dashboard {
-    margin-top: 20px;
+    margin-top: 24px;
 }
 
 .empty-state {
     text-align: center;
-    padding: 40px;
+    padding: 60px;
     color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
 }
 
 @media (max-width: 900px) {
@@ -677,17 +773,21 @@ a:hover {
 /* -------- PRODUCT DETAILS PAGE -------- */
 .detail-container {
     max-width: 1200px;
-    margin: 40px auto;
+    margin: 60px auto;
     padding: 0 5%;
 }
 
 .product-detail-card {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: 60px;
     padding: 40px;
     border-radius: 32px;
     margin-bottom: 60px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.3);
 }
 
 .detail-image img {
@@ -695,116 +795,132 @@ a:hover {
     height: auto;
     max-height: 500px;
     object-fit: cover;
-    border-radius: 20px;
+    border-radius: 24px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255,255,255,0.06);
 }
 
 .detail-info h1 {
-    font-size: 36px;
+    font-size: 42px;
     font-weight: 800;
-    margin-bottom: 10px;
-    background: linear-gradient(to right, #fff, var(--text-secondary));
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #ffffff, #cbd5e1);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    line-height: 1.2;
 }
 
 .category-tag {
     display: inline-block;
-    padding: 4px 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    font-size: 13px;
+    padding: 6px 16px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
     color: var(--accent-1);
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .rating-badge {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    background: rgba(245, 158, 11, 0.1);
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.3);
     color: var(--warning);
-    padding: 4px 12px;
-    border-radius: 20px;
+    padding: 6px 16px;
+    border-radius: 30px;
     font-weight: 700;
     font-size: 14px;
-    margin-left: 10px;
+    margin-left: 12px;
     vertical-align: middle;
 }
 
 .detail-price {
-    font-size: 32px;
+    font-size: 36px;
     font-weight: 800;
-    color: var(--success);
-    margin: 20px 0;
+    color: #10b981;
+    margin: 24px 0;
+    text-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
 }
 
 .detail-desc {
     font-size: 16px;
     color: var(--text-secondary);
     line-height: 1.8;
-    margin-bottom: 30px;
+    margin-bottom: 32px;
 }
 
 /* -------- REVIEWS SECTION -------- */
 .reviews-section {
     max-width: 800px;
+    margin: 0 auto;
 }
 
 .section-header h2 {
-    font-size: 28px;
-    margin-bottom: 30px;
+    font-size: 32px;
+    margin-bottom: 40px;
+    color: var(--text-primary);
 }
 
 .add-review-card {
-    padding: 30px;
+    padding: 32px;
     border-radius: 24px;
     margin-bottom: 40px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .add-review-card h3 {
     margin-bottom: 20px;
+    font-size: 20px;
 }
 
 .rating-input {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
     gap: 15px;
 }
 
 .rating-input select {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: white;
-    padding: 8px;
-    border-radius: 10px;
+    padding: 10px 16px;
+    border-radius: 12px;
     outline: none;
+    font-family: 'Outfit', sans-serif;
 }
 
 .review-card {
-    padding: 24px;
-    border-radius: 20px;
+    padding: 24px 32px;
+    border-radius: 24px;
     margin-bottom: 20px;
-    transition: transform 0.3s;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .review-card:hover {
     transform: translateX(10px);
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255,255,255,0.1);
 }
 
 .review-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .reviewer {
     font-weight: 700;
-    font-size: 16px;
+    font-size: 18px;
+    color: var(--text-primary);
 }
 
 .review-rating {
@@ -813,21 +929,23 @@ a:hover {
 }
 
 .review-date {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-secondary);
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 }
 
 .review-comment {
     font-size: 15px;
-    line-height: 1.6;
+    line-height: 1.7;
+    color: var(--text-secondary);
 }
 
 .empty-reviews {
     text-align: center;
-    padding: 40px;
+    padding: 60px;
     color: var(--text-secondary);
-    border: 1px dashed var(--glass-border);
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px dashed rgba(255, 255, 255, 0.1);
     border-radius: 20px;
 }
 
