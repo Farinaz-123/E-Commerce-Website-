@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Herbal Basket — Ayurvedic Wellness Store</title>
+    <meta name="description" content="Discover 100% natural ayurvedic products, dry fruits, and wellness essentials at The Herbal Basket. Pure. Potent. Premium.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- HERO NAVBAR -->
+    <nav class="hero-navbar">
+        <h2 class="hero-logo">The Herbal Basket</h2>
+        <div class="hero-nav-links">
+            {% if session.get('user_id') %}
+                <a href="/products" class="hero-nav-link">Shop Now</a>
+                <a href="/dashboard" class="hero-nav-link">My Account</a>
+                <a href="/cart" class="hero-nav-link">Cart</a>
+            {% else %}
+                <a href="/login" class="hero-nav-link">Login</a>
+                <a href="/register" class="hero-nav-btn">Get Started</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section" id="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="hero-badge">🌿 100% Natural & Ayurvedic</span>
+            <h1 class="hero-title">Wellness Rooted<br>in Ancient Wisdom</h1>
+            <p class="hero-subtitle">
+                Discover handpicked ayurvedic remedies, premium dry fruits, and natural skincare — trusted by thousands for holistic health.
+            </p>
+            <div class="hero-cta-group">
+                {% if session.get('user_id') %}
+                    <a href="/products" class="hero-cta-primary">Explore Products</a>
+                {% else %}
+                    <a href="/register" class="hero-cta-primary">Start Shopping</a>
+                    <a href="/login" class="hero-cta-secondary">Already a member? Login</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="hero-scroll-indicator">
+            <span>Scroll to explore</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- FEATURES STRIP -->
+    <section class="features-strip">
+        <div class="feature-card">
+            <div class="feature-icon">🌿</div>
+            <h3>100% Ayurvedic</h3>
+            <p>Pure, natural ingredients sourced from trusted farms</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔬</div>
+            <h3>Lab Tested</h3>
+            <p>Every product undergoes rigorous quality testing</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🚚</div>
+            <h3>Fast Delivery</h3>
+            <p>Get your wellness essentials delivered to your door</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">💚</div>
+            <h3>Trusted by 1000+</h3>
+            <p>Loved by customers across India for genuine results</p>
+        </div>
+    </section>
+
+    <!-- FEATURED PRODUCTS -->
+    {% if featured_products %}
+    <section class="featured-section">
+        <div class="featured-header">
+            <span class="section-badge">✨ Featured</span>
+            <h2>Bestselling Products</h2>
+            <p>Our most loved wellness essentials, handpicked for you</p>
+        </div>
+        <div class="featured-grid">
+            {% for product in featured_products %}
+            <div class="product-card">
+                <div class="product-image">
+                    <a href="/product/{{ product.id }}">
+                        <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+                    </a>
+                </div>
+                <div class="product-info">
+                    <h3><a href="/product/{{ product.id }}" style="color: inherit;">{{ product.name }}</a></h3>
+                    <p class="price">₹ {{ product.price }}</p>
+                    <p>{{ product.description[:80] }}{% if product.description|length > 80 %}...{% endif %}</p>
+                    {% if session.get('user_id') %}
+                        {% if product.stock > 0 %}
+                            <a href="/add_to_cart/{{ product.id }}" class="btn">Add to Cart</a>
+                        {% else %}
+                            <button class="btn" disabled style="background: var(--text-secondary); cursor: not-allowed;">Out of Stock</button>
+                        {% endif %}
+                    {% else %}
+                        <a href="/login" class="btn">Login to Buy</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="featured-cta">
+            {% if session.get('user_id') %}
+                <a href="/products" class="hero-cta-primary">View All Products →</a>
+            {% else %}
+                <a href="/register" class="hero-cta-primary">Sign Up to Explore →</a>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- FOOTER -->
+    <footer class="hero-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h3>The Herbal Basket</h3>
+                <p>Your trusted Ayurvedic wellness store. Pure products for a healthier life.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="/products">Products</a>
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            </div>
+            <div class="footer-links">
+                <h4>Categories</h4>
+                <a href="/products?category=Dry Fruits">Dry Fruits</a>
+                <a href="/products?category=Skin Care">Skin Care</a>
+                <a href="/products?category=Hair Care">Hair Care</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 The Herbal Basket. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

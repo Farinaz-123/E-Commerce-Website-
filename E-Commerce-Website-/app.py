@@ -190,7 +190,12 @@ The Herbal Basket Team
 # ---------------- HOME ----------------
 @app.route("/")
 def home():
-    return redirect("/login")
+    conn = get_db()
+    featured_products = conn.execute(
+        "SELECT * FROM products ORDER BY id DESC LIMIT 4"
+    ).fetchall()
+    conn.close()
+    return render_template("home.html", featured_products=featured_products)
 
 # -------- REGISTRATION --------
 @app.route("/register", methods=["GET", "POST"])
