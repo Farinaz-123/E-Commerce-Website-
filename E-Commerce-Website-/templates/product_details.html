@@ -35,6 +35,40 @@
 
                 <p class="detail-price">₹ {{ product.price }}</p>
                 <p class="detail-desc">{{ product.description }}</p>
+                
+                {% if product.benefits or product.how_to_use or product.ayurvedic_properties or product.precautions %}
+                <div class="product-benefits" style="margin-top: 20px; margin-bottom: 25px; padding: 20px; background: rgba(255, 255, 255, 0.05); border-radius: 12px; border: 1px solid var(--glass-border);">
+                    <h3 style="margin-bottom: 15px; color: var(--accent-1); font-size: 18px;">Ingredients & Benefits</h3>
+                    
+                    {% if product.benefits %}
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--text-primary);">✓ Benefits:</strong>
+                        <p style="margin-top: 5px; font-size: 15px;">{{ product.benefits }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if product.how_to_use %}
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--text-primary);">📝 How to use:</strong>
+                        <p style="margin-top: 5px; font-size: 15px;">{{ product.how_to_use }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if product.ayurvedic_properties %}
+                    <div style="margin-bottom: 15px;">
+                        <strong style="color: var(--text-primary);">🌿 Ayurvedic Properties:</strong>
+                        <p style="margin-top: 5px; font-size: 15px;">{{ product.ayurvedic_properties }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    {% if product.precautions %}
+                    <div>
+                        <strong style="color: var(--text-primary);">⚠️ Precautions:</strong>
+                        <p style="margin-top: 5px; font-size: 15px; color: var(--warning);">{{ product.precautions }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
 
                 {% if product.stock > 0 %}
                     <p class="stock-info">In Stock: {{ product.stock }} items</p>

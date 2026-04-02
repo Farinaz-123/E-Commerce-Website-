@@ -14,8 +14,12 @@
     <form method="POST" enctype="multipart/form-data">
         <input type="text" name="name" value="{{ product[1] }}" required>
         <input type="number" name="price" value="{{ product[2] }}" required>
-        <textarea name="description" required>{{ product[3] }}</textarea>
-        <input type="text" name="category" value="{{ product[5] }}" placeholder="Category" required>
+        <textarea name="description" required>{{ product['description'] }}</textarea>
+        <textarea name="benefits" placeholder="Benefits">{{ product['benefits'] or '' }}</textarea>
+        <textarea name="how_to_use" placeholder="How to Use">{{ product['how_to_use'] or '' }}</textarea>
+        <textarea name="ayurvedic_properties" placeholder="Ayurvedic Properties">{{ product['ayurvedic_properties'] or '' }}</textarea>
+        <textarea name="precautions" placeholder="Precautions">{{ product['precautions'] or '' }}</textarea>
+        <input type="text" name="category" value="{{ product['category'] }}" placeholder="Category" required>
         <input type="number" name="stock" value="{{ product[6] }}" placeholder="Stock" min="0" required>
         <!-- Optional image replace -->
         <input type="file" name="image" accept="image/*">

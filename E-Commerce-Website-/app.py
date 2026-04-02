@@ -86,6 +86,10 @@ def init_db():
             image TEXT,
             category TEXT,
             stock INTEGER DEFAULT 0,
+            benefits TEXT,
+            how_to_use TEXT,
+            ayurvedic_properties TEXT,
+            precautions TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
@@ -644,6 +648,10 @@ def add_product():
         description = request.form["description"]
         category = request.form["category"]
         stock = request.form["stock"]
+        benefits = request.form.get("benefits", "")
+        how_to_use = request.form.get("how_to_use", "")
+        ayurvedic_properties = request.form.get("ayurvedic_properties", "")
+        precautions = request.form.get("precautions", "")
 
         image = request.files["image"]
 
@@ -654,8 +662,10 @@ def add_product():
         conn = get_db()
 
         conn.execute(
-            "INSERT INTO products (name, price, description, image, category, stock) VALUES (?, ?, ?, ?, ?, ?)",
-            (name, price, description, filename, category, stock)
+            """INSERT INTO products 
+               (name, price, description, image, category, stock, benefits, how_to_use, ayurvedic_properties, precautions) 
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (name, price, description, filename, category, stock, benefits, how_to_use, ayurvedic_properties, precautions)
         )
 
         conn.commit()
@@ -794,22 +804,26 @@ def edit_product(id):
         description = request.form['description']
         category = request.form['category']
         stock = request.form['stock']
+        benefits = request.form.get('benefits', '')
+        how_to_use = request.form.get('how_to_use', '')
+        ayurvedic_properties = request.form.get('ayurvedic_properties', '')
+        precautions = request.form.get('precautions', '')
         image = request.files.get('image')
 
         if image and image.filename:
             filename = image.filename
             image.save(os.path.join(UPLOAD_FOLDER, filename))
             cursor.execute("""
-            UPDATE products
-            SET name=?, price=?, description=?, image=?, category=?, stock=?
-            WHERE id=?
-            """,(name,price,description,filename,category,stock,id))
+                UPDATE products 
+                SET name=?, price=?, description=?, image=?, category=?, stock=?, benefits=?, how_to_use=?, ayurvedic_properties=?, precautions=? 
+                WHERE id=?
+            """, (name, price, description, filename, category, stock, benefits, how_to_use, ayurvedic_properties, precautions, id))
         else:
             cursor.execute("""
-            UPDATE products
-            SET name=?, price=?, description=?, category=?, stock=?
-            WHERE id=?
-            """,(name,price,description,category,stock,id))
+                UPDATE products 
+                SET name=?, price=?, description=?, category=?, stock=?, benefits=?, how_to_use=?, ayurvedic_properties=?, precautions=? 
+                WHERE id=?
+            """, (name, price, description, category, stock, benefits, how_to_use, ayurvedic_properties, precautions, id))
 
         conn.commit()
         conn.close()
