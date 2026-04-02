@@ -1,60 +1,77 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart</title>
+    <title>Cart — The Herbal Basket</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
-<!-- NAVBAR -->
-<div class="navbar">
-    <h2>Your Cart</h2>
-
-    <div>
-        <a href="/products">Products</a>
-        <a href="/logout">Logout</a>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <h2>The Herbal Basket</h2>
+        <div class="links">
+            <a href="/products">Products</a>
+            <a href="/dashboard">My Account</a>
+            <a href="/logout">Logout</a>
+        </div>
     </div>
-</div>
 
-<!-- CART ITEMS -->
-<div class="table-container">
+    <!-- CART ITEMS -->
+    <div class="table-container">
 
-    {% if items %}
+        {% if items %}
         <table class="cart-table">
             <tr>
                 <th>Product</th>
                 <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
                 <th>Action</th>
             </tr>
 
             {% for item in items %}
             <tr>
-                <td>{{ item.name }}</td>
+                <td>
+                    <div class="cart-product-info">
+                        <img src="{{ url_for('static', filename='images/' + item.image) }}" alt="{{ item.name }}">
+                        <span>{{ item.name }}</span>
+                    </div>
+                </td>
                 <td>₹ {{ item.price }}</td>
                 <td>
-                    <a href="/remove/{{ item.id }}" class="btn-danger">
-                        Remove
-                    </a>
+                    <div class="qty-controls">
+                        <a href="/cart/decrement/{{ item.product_id }}" class="qty-btn">−</a>
+                        <span class="qty-value">{{ item.quantity }}</span>
+                        <a href="/cart/increment/{{ item.product_id }}" class="qty-btn">+</a>
+                    </div>
+                </td>
+                <td class="cart-subtotal">₹ {{ item.price * item.quantity }}</td>
+                <td>
+                    <a href="/remove/{{ item.product_id }}" class="cart-remove-btn">Remove</a>
                 </td>
             </tr>
             {% endfor %}
 
         </table>
 
-        <div class="cart-summary">
-            <h3>Cart Total: ₹ {{ total }}</h3>
-            <form action="/checkout" method="POST">
-                <button type="submit" class="checkout-btn">Checkout with Stripe</button>
-            </form>
+        <div class="total">
+            Cart Total: ₹ {{ total }}
         </div>
-        
-    {% else %}
-        <p class="empty">Your cart is empty</p>
-    {% endif %}
 
-</div>
+        <div class="checkout-section">
+            <a href="/checkout" class="btn invoice-btn">Proceed to Checkout →</a>
+        </div>
+
+        {% else %}
+        <p class="empty">Your cart is empty. <a href="/products">Start shopping!</a></p>
+        {% endif %}
+
+    </div>
 
 </body>
+
 </html>

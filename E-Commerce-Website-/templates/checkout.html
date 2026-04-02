@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout — The Herbal Basket</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <h2>The Herbal Basket</h2>
+        <div class="links">
+            <a href="/products">Products</a>
+            <a href="/cart">Back to Cart</a>
+        </div>
+    </div>
+
+    <div class="checkout-container">
+
+        <!-- PROGRESS STEPS -->
+        <div class="checkout-steps">
+            <div class="step active" id="step-indicator-1">
+                <div class="step-circle">1</div>
+                <span>Cart</span>
+            </div>
+            <div class="step-line active"></div>
+            <div class="step active" id="step-indicator-2">
+                <div class="step-circle">2</div>
+                <span>Details</span>
+            </div>
+            <div class="step-line" id="line-2"></div>
+            <div class="step" id="step-indicator-3">
+                <div class="step-circle">3</div>
+                <span>Shipping</span>
+            </div>
+            <div class="step-line" id="line-3"></div>
+            <div class="step" id="step-indicator-4">
+                <div class="step-circle">4</div>
+                <span>Payment</span>
+            </div>
+        </div>
+
+        <div class="checkout-layout">
+
+            <!-- FORM SECTION -->
+            <div class="checkout-form-section">
+
+                <!-- STEP 1: Contact Info -->
+                <div class="checkout-step-panel" id="step-1">
+                    <h2>Contact Information</h2>
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" required>
+                    </div>
+                    <button class="btn checkout-next-btn" onclick="goToStep(2)">Continue to Shipping →</button>
+                </div>
+
+                <!-- STEP 2: Shipping Address -->
+                <div class="checkout-step-panel hidden" id="step-2">
+                    <h2>Shipping Address</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first_name">First name</label>
+                            <input type="text" id="first_name" name="first_name" placeholder="First name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Last name</label>
+                            <input type="text" id="last_name" name="last_name" placeholder="Last name" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address" placeholder="Street address" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apartment">Apartment, suite, etc. (optional)</label>
+                        <input type="text" id="apartment" name="apartment" placeholder="Apt, suite, floor">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city" placeholder="City" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State</label>
+                            <select id="state" name="state" required>
+                                <option value="">Select State</option>
+                                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                <option value="Assam">Assam</option>
+                                <option value="Bihar">Bihar</option>
+                                <option value="Chhattisgarh">Chhattisgarh</option>
+                                <option value="Goa">Goa</option>
+                                <option value="Gujarat">Gujarat</option>
+                                <option value="Haryana">Haryana</option>
+                                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                <option value="Jharkhand">Jharkhand</option>
+                                <option value="Karnataka">Karnataka</option>
+                                <option value="Kerala">Kerala</option>
+                                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                <option value="Maharashtra">Maharashtra</option>
+                                <option value="Manipur">Manipur</option>
+                                <option value="Meghalaya">Meghalaya</option>
+                                <option value="Mizoram">Mizoram</option>
+                                <option value="Nagaland">Nagaland</option>
+                                <option value="Odisha">Odisha</option>
+                                <option value="Punjab">Punjab</option>
+                                <option value="Rajasthan">Rajasthan</option>
+                                <option value="Sikkim">Sikkim</option>
+                                <option value="Tamil Nadu">Tamil Nadu</option>
+                                <option value="Telangana">Telangana</option>
+                                <option value="Tripura">Tripura</option>
+                                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                <option value="Uttarakhand">Uttarakhand</option>
+                                <option value="West Bengal">West Bengal</option>
+                                <option value="Delhi">Delhi</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pincode">PIN Code</label>
+                            <input type="text" id="pincode" name="pincode" placeholder="560001" required>
+                        </div>
+                    </div>
+                    <div class="checkout-btn-row">
+                        <button class="btn checkout-back-btn" onclick="goToStep(1)">← Back</button>
+                        <button class="btn checkout-next-btn" onclick="goToStep(3)">Continue to Payment →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Review & Pay -->
+                <div class="checkout-step-panel hidden" id="step-3">
+                    <h2>Review & Pay</h2>
+                    <div class="review-summary-box">
+                        <div class="review-row">
+                            <span class="review-label">Contact</span>
+                            <span class="review-value" id="review-email">—</span>
+                        </div>
+                        <div class="review-row">
+                            <span class="review-label">Phone</span>
+                            <span class="review-value" id="review-phone">—</span>
+                        </div>
+                        <div class="review-row">
+                            <span class="review-label">Ship to</span>
+                            <span class="review-value" id="review-address">—</span>
+                        </div>
+                    </div>
+
+                    <form action="/checkout" method="POST" id="checkout-form">
+                        <input type="hidden" name="email" id="form-email">
+                        <input type="hidden" name="phone" id="form-phone">
+                        <input type="hidden" name="first_name" id="form-first-name">
+                        <input type="hidden" name="last_name" id="form-last-name">
+                        <input type="hidden" name="address" id="form-address">
+                        <input type="hidden" name="apartment" id="form-apartment">
+                        <input type="hidden" name="city" id="form-city">
+                        <input type="hidden" name="state" id="form-state">
+                        <input type="hidden" name="pincode" id="form-pincode">
+                        <div class="checkout-btn-row">
+                            <button type="button" class="btn checkout-back-btn" onclick="goToStep(2)">← Back</button>
+                            <button type="submit" class="btn checkout-pay-btn">Pay ₹ {{ total }} with Stripe →</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- ORDER SUMMARY SIDEBAR -->
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-items">
+                    {% for item in items %}
+                    <div class="summary-item">
+                        <div class="summary-item-img">
+                            <img src="{{ url_for('static', filename='images/' + item.image) }}" alt="{{ item.name }}">
+                            <span class="summary-item-qty">{{ item.quantity }}</span>
+                        </div>
+                        <div class="summary-item-info">
+                            <span class="summary-item-name">{{ item.name }}</span>
+                        </div>
+                        <span class="summary-item-price">₹ {{ item.price * item.quantity }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>₹ {{ total }}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span class="shipping-free">FREE</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row summary-total">
+                    <span>Total</span>
+                    <span>₹ {{ total }}</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+
+        function goToStep(step) {
+            // Validate current step before moving forward
+            if (step > currentStep) {
+                if (!validateStep(currentStep)) return;
+            }
+
+            // Hide all panels
+            document.querySelectorAll('.checkout-step-panel').forEach(p => p.classList.add('hidden'));
+            // Show target panel
+            document.getElementById('step-' + step).classList.remove('hidden');
+
+            // Update step indicators
+            for (let i = 1; i <= 4; i++) {
+                const indicator = document.getElementById('step-indicator-' + i);
+                const line = document.getElementById('line-' + i);
+                if (indicator) {
+                    if (i <= step + 1) {
+                        indicator.classList.add('active');
+                    } else {
+                        indicator.classList.remove('active');
+                    }
+                }
+                if (line) {
+                    if (i <= step + 1) {
+                        line.classList.add('active');
+                    } else {
+                        line.classList.remove('active');
+                    }
+                }
+            }
+
+            // If going to review step, populate summary
+            if (step === 3) {
+                populateReview();
+            }
+
+            currentStep = step;
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function validateStep(step) {
+            if (step === 1) {
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                if (!email || !phone) {
+                    alert('Please fill in your email and phone number.');
+                    return false;
+                }
+                return true;
+            }
+            if (step === 2) {
+                const fields = ['first_name', 'last_name', 'address', 'city', 'state', 'pincode'];
+                for (const id of fields) {
+                    if (!document.getElementById(id).value.trim()) {
+                        alert('Please fill in all shipping fields.');
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return true;
+        }
+
+        function populateReview() {
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const firstName = document.getElementById('first_name').value;
+            const lastName = document.getElementById('last_name').value;
+            const address = document.getElementById('address').value;
+            const apartment = document.getElementById('apartment').value;
+            const city = document.getElementById('city').value;
+            const state = document.getElementById('state').value;
+            const pincode = document.getElementById('pincode').value;
+
+            document.getElementById('review-email').textContent = email;
+            document.getElementById('review-phone').textContent = phone;
+            document.getElementById('review-address').textContent =
+                `${firstName} ${lastName}, ${address}${apartment ? ', ' + apartment : ''}, ${city}, ${state} - ${pincode}`;
+
+            // Fill hidden form fields
+            document.getElementById('form-email').value = email;
+            document.getElementById('form-phone').value = phone;
+            document.getElementById('form-first-name').value = firstName;
+            document.getElementById('form-last-name').value = lastName;
+            document.getElementById('form-address').value = address;
+            document.getElementById('form-apartment').value = apartment;
+            document.getElementById('form-city').value = city;
+            document.getElementById('form-state').value = state;
+            document.getElementById('form-pincode').value = pincode;
+        }
+    </script>
+
+</body>
+
+</html>

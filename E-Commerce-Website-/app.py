@@ -454,6 +454,16 @@ def add_to_cart(product_id):
 
     conn = get_db()
 
+    # Check if this product is already in the cart for this user
+    existing = conn.execute(
+        "SELECT id FROM cart WHERE user_id=? AND product_id=?",
+        (session["user_id"], product_id)
+    ).fetchone()
+
+    if existing:
+        # Add another row (quantity is tracked by counting rows)
+        pass  # We still insert a new row to keep the existing checkout logic working
+
     conn.execute(
         "INSERT INTO cart (user_id, product_id) VALUES (?, ?)",
         (session["user_id"], product_id)
@@ -462,6 +472,10 @@ def add_to_cart(product_id):
     conn.commit()
     conn.close()
 
+    # Redirect back to the referring page, or products
+    referrer = request.referrer
+    if referrer and "/cart" in referrer:
+        return redirect("/cart")
     return redirect("/products")
 
 # ---------------- CART ----------------
@@ -473,54 +487,105 @@ def cart():
 
     conn = get_db()
 
+    # Group cart items by product, count quantity
     items = conn.execute("""
-        SELECT cart.id, products.name, products.price, products.image
+        SELECT products.id as product_id, products.name, products.price, products.image,
+               COUNT(cart.id) as quantity
         FROM cart
         JOIN products ON cart.product_id = products.id
         WHERE cart.user_id=?
+        GROUP BY products.id
     """, (session["user_id"],)).fetchall()
 
-    total = sum(item["price"] for item in items)
+    total = sum(item["price"] * item["quantity"] for item in items)
 
     conn.close()
 
     return render_template("cart.html", items=items, total=total)
 
-# ---------------- REMOVE FROM CART ----------------
-@app.route("/remove/<int:id>")
-def remove(id):
+# ---------------- INCREMENT CART ITEM ----------------
+@app.route("/cart/increment/<int:product_id>")
+def cart_increment(product_id):
+    if "user_id" not in session:
+        return redirect("/login")
 
     conn = get_db()
-
-    conn.execute("DELETE FROM cart WHERE id=?", (id,))
-
+    conn.execute(
+        "INSERT INTO cart (user_id, product_id) VALUES (?, ?)",
+        (session["user_id"], product_id)
+    )
     conn.commit()
     conn.close()
 
     return redirect("/cart")
 
-# ---------------- CHECKOUT ----------------
-@app.route("/checkout", methods=["POST"])
+# ---------------- DECREMENT CART ITEM ----------------
+@app.route("/cart/decrement/<int:product_id>")
+def cart_decrement(product_id):
+    if "user_id" not in session:
+        return redirect("/login")
+
+    conn = get_db()
+    # Remove only ONE row for this product (the most recent one)
+    row = conn.execute(
+        "SELECT id FROM cart WHERE user_id=? AND product_id=? LIMIT 1",
+        (session["user_id"], product_id)
+    ).fetchone()
+    if row:
+        conn.execute("DELETE FROM cart WHERE id=?", (row["id"],))
+        conn.commit()
+    conn.close()
+
+    return redirect("/cart")
+
+# ---------------- REMOVE FROM CART ----------------
+@app.route("/remove/<int:product_id>")
+def remove(product_id):
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    conn = get_db()
+    # Remove ALL rows of this product from the user's cart
+    conn.execute(
+        "DELETE FROM cart WHERE user_id=? AND product_id=?",
+        (session["user_id"], product_id)
+    )
+    conn.commit()
+    conn.close()
+
+    return redirect("/cart")
+
+# ---------------- CHECKOUT PAGE ----------------
+@app.route("/checkout", methods=["GET", "POST"])
 def checkout():
     if "user_id" not in session:
         return redirect("/login")
         
     conn = get_db()
     
+    # Group items by product with quantity
     items = conn.execute("""
-        SELECT cart.product_id, products.name, products.price, products.image
+        SELECT products.id as product_id, products.name, products.price, products.image,
+               COUNT(cart.id) as quantity
         FROM cart
         JOIN products ON cart.product_id = products.id
         WHERE cart.user_id=?
+        GROUP BY products.id
     """, (session["user_id"],)).fetchall()
     
     if not items:
         conn.close()
         return redirect("/cart")
-        
+    
+    total = sum(item["price"] * item["quantity"] for item in items)
     conn.close()
 
-    # Build line items for Stripe Checkout
+    # GET — show the checkout page
+    if request.method == "GET":
+        return render_template("checkout.html", items=items, total=total)
+
+    # POST — process payment through Stripe
     line_items = []
     for item in items:
         line_items.append({
@@ -529,14 +594,12 @@ def checkout():
                 'product_data': {
                     'name': item['name'],
                 },
-                'unit_amount': item['price'] * 100, # Stripe expects amount in paise
+                'unit_amount': item['price'] * 100,
             },
-            'quantity': 1,
+            'quantity': item['quantity'],
         })
     
     try:
-        # Create new Checkout Session for the order
-        # For full integrations, it's better to pass metadata like user_id but we just redirect here
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
             line_items=line_items,
